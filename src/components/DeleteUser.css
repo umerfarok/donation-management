@@ -1,0 +1,39 @@
+.delete-user {
+    margin-top: 20px;
+  }
+  
+  h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .input-container {
+    margin-bottom: 10px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 5px;
+    width: 200px;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  
+  .success-message {
+    color: green;
+  }
+  
+  button {
+    padding: 5px 10px;
+    background-color: #4287f5;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  

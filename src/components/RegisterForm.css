@@ -1,0 +1,13 @@
+.register-form {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+  
