@@ -1,119 +1,100 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const events = require('events');
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
 const verifyToken = require('./jwtAuthMiddleware');
-
-
-// secret key for encryption of password salt
-const secretKey = 'your-secret-key';
-
-
+const loginRoute = require('./login.js');
+const User = require('./user.js');
+const addDonationUserRoute = require('./addDonationUser.js');
+const editDonationUserRoute = require('./editDonationUser.js');
+const deleteDonationUserRoute = require('./deleteDonationUser.js');
+const getDonationUsersRoute = require('./getDonationUsers.js');
+const secretKey = require('./constants.js');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 var eventEmitter = new events.EventEmitter();
+const dotenv = require('dotenv');
+dotenv.config();
 
-
-var myEventHandler = function () {
-  console.log('I hear a scream!');
+var sendEmailOnEventArrive = function (email, userName) {
+  console.log('Reminder sent', email);
+  let transporter = nodemailer.createTransport({
+    host: 'email-smtp.us-east-1.amazonaws.com', 
+    secure: true, 
+    auth: {
+      user: process.env.SMTP_USER, 
+      pass: process.env.SMTP_PASSWORD 
+    }
+  });
+  
+  let mailOptions = {
+    from: 'umarkml713@gmail.com',
+    to: email,
+    subject: 'Your Contribution Matters - Please Donate for the Masjid',
+    text: `Dear ${userName},
+  
+  We hope this message finds you well.
+  
+  We noticed that we haven't received your donation for the Masjid this month. Your contributions play a significant role in maintaining the Masjid and supporting our community.
+  
+  If you haven't had a chance to donate yet, we kindly request you to do so at your earliest convenience. Every donation, no matter the size, makes a difference.
+  
+  You can make your donation through [insert donation method here].
+  
+  Thank you for your continued support. We greatly appreciate your generosity.
+  
+  Best regards,
+  Masjid Committee
+  `
+  };
+  transporter.sendMail(
+    mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error occurred', error);
+    } else {
+      console.log('Email sent', info.response);
+    }
+  });
 }
 
-
-eventEmitter.on('scream', myEventHandler);
-
-
+eventEmitter.on('SendEmail', sendEmailOnEventArrive);
 
 const PORT = 4000;
 
-const CONNECTION_STRING =
-  "mongodb+srv://umerfarooqdev:bigbang713@cbcteam.kgcnp1f.mongodb.net/?retryWrites=true&w=majority";
-
-mongoose.connect(CONNECTION_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-mongoose.connection.on("connected", () => {
-  console.log("Connected to MongoDB");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB connection error:", err);
-  process.exit(1);
-});
-
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  teamName: {
-    type: String,
-  },
-  money: {
-    type: Number,
-  },
-});
-
-const User = mongoose.model("User", userSchema);
 
 app.use(express.json());
 app.use(cors());
+app.use(loginRoute);
+app.use(addDonationUserRoute);
+app.use(editDonationUserRoute);
+app.use(deleteDonationUserRoute);
+app.use(getDonationUsersRoute);
 
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    // matching the crypto password with the incoming password...
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+app.post('/sendReminder', verifyToken,  (req, res) => {
+  const {email, userName} = req.body
+  eventEmitter.emit('SendEmail', email, userName);
+  res.send('Reminder sent');
+} );
 
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    // password is valid and senig a token for front end that expires in 1 hr
-    const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
-    res.json({ token: token });
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).send("Something went wrong");
-  }
+app.get('/isLoggedIn', verifyToken, (req, res) => {
+  return res.json(true);
 });
-
-
-app.get("/home",verifyToken , async (req, res) => {
+app.get("/home", verifyToken, async (req, res) => {
   try {
     const users = await User.find();
     eventEmitter.emit('dinder');
     res.json(users);
   } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).send("Something went wrong");
+    console.error("Error adding donation user:", error);
+    res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });
 
-app.patch("/users/:userId",verifyToken, async (req, res) => {
+app.patch("/users/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   const { money } = req.body;
-  const amount   = money
+  const amount = money
   console.log(money + " " + userId);
   try {
     const user = await User.findById(userId);
@@ -126,8 +107,8 @@ app.patch("/users/:userId",verifyToken, async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).send("Something went wrong");
+    console.error("Error adding donation user:", error);
+    res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });
 
@@ -136,13 +117,10 @@ app.post("/register", async (req, res) => {
   try {
     const { name, email, password, date, teamName, money } = req.body;
 
-    // Generate a salt to be used for password hashing
     const salt = await bcrypt.genSalt(10);
 
-    // Hash the password using the generated salt
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create a new user with the hashed password and additional fields
     const user = new User({
       name,
       email,
@@ -155,12 +133,12 @@ app.post("/register", async (req, res) => {
     const result = await user.save();
     res.json(result);
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).send("Something went wrong");
+    console.error("Error adding donation user:", error);
+    res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });
 
-app.delete("/users/:userId",verifyToken , async (req, res) => {
+app.delete("/users/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   const { password } = req.body;
   console.log(`delete user ${userId} and password ${password}`)
@@ -177,10 +155,13 @@ app.delete("/users/:userId",verifyToken , async (req, res) => {
     }
     res.json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).send("Something went wrong");
+    console.error("Error adding donation user:", error);
+    res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

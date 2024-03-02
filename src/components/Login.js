@@ -21,16 +21,11 @@ const LoginForm = ({ setIsLoggedIn, setJwt }) => {
 
       if (response.ok) {
         const data = await response.json();
-
-        // Store the JWT in local storage and set the login status
         localStorage.setItem('jwt', data.token);
         setIsLoggedIn(true);
         setJwt(data.token);
-
-        // Redirect to home page after successful login
         history('/');
       } else {
-        // Handle login error
         console.error('Login failed');
       }
     } catch (error) {
