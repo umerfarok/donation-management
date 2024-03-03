@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { REACT_API_ENDPOINT } from '../constants';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const LoginForm = ({ setIsLoggedIn, setJwt }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const history = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await fetch(`${REACT_API_ENDPOINT}/login`, {
@@ -31,6 +33,8 @@ const LoginForm = ({ setIsLoggedIn, setJwt }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,8 +64,8 @@ const LoginForm = ({ setIsLoggedIn, setJwt }) => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Login
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Login'}
         </button>
       </form>
     </div>

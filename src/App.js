@@ -56,6 +56,8 @@ const App = () => {
       localStorage.removeItem('jwt');
       setIsLoggedIn(false);
     } else {
+      localStorage.removeItem('jwt');
+      setIsLoggedIn(false);
       console.error('Logout failed');
     }
   };
@@ -100,11 +102,13 @@ const App = () => {
             <Tooltip title="Register">
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="register" component={Link} to="/register">
                 <PersonAddIcon />
+                <Typography variant="body2">Register</Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Login">
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="login" component={Link} to="/login">
                 <LoginIcon />
+                <Typography variant="body2">Login</Typography>
               </IconButton>
             </Tooltip>
           </>
