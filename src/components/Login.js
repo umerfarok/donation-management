@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { REACT_API_ENDPOINT } from '../constants';
 
 
 const LoginForm = ({ setIsLoggedIn, setJwt }) => {
@@ -11,7 +12,7 @@ const LoginForm = ({ setIsLoggedIn, setJwt }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:4000/login', {
+      const response = await fetch(`${REACT_API_ENDPOINT}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

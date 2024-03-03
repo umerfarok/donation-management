@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { BeatLoader } from 'react-spinners';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
+import { REACT_API_ENDPOINT } from '../constants';
 
 function Home() {
   const [users, setUsers] = useState([]);
@@ -25,7 +26,7 @@ navigate('/login')
           Authorization: `Bearer ${token}`,
         }
       };
-      const response = await axios.get('http://localhost:4000/home', config);
+      const response = await axios.get(`${REACT_API_ENDPOINT}/home`, config);
       // if (response.status === 401) {
       //   // Handle unauthorized access, such as clearing token and redirecting to login page
       //   setIsLoggedIn(false);

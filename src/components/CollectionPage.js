@@ -5,6 +5,7 @@ import { BeatLoader } from 'react-spinners';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CollectionPage.css';
 import DeleteUser from './DeleteUser';
+import { REACT_API_ENDPOINT } from '../constants';
 
 const CollectionPage = () => {
   const [users, setUsers] = useState([]);
@@ -32,7 +33,7 @@ const CollectionPage = () => {
           Authorization: `Bearer ${token}`,
         }
       };
-      const response = await axios.get('http://localhost:4000/home', config);
+      const response = await axios.get(`${REACT_API_ENDPOINT}/home`, config);
       setUsers(response.data);
       setLoading(false);
       setError('');
@@ -53,7 +54,7 @@ const CollectionPage = () => {
           amount: parsedAmount,
         },
       };
-      const response = await axios.patch(`http://localhost:4000/users/${userId}`, config);
+      const response = await axios.patch(`${REACT_API_ENDPOINT}/users/${userId}`, config);
       if (response.status === 200) {
         fetchUsers();
         setError('');
@@ -75,7 +76,7 @@ const CollectionPage = () => {
           password,
         },
       };
-      const response = await axios.delete(`http://localhost:4000/users/${userId}`, config);
+      const response = await axios.delete(`${REACT_API_ENDPOINT}/users/${userId}`, config);
       if (response.status === 200) {
         fetchUsers();
         setError('');

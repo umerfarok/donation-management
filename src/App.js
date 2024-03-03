@@ -12,6 +12,7 @@ import CollectionPage from './components/CollectionPage';
 import LoginForm from './components/Login';
 import DonationUserManager from './components/DonationUserManager';
 import './App.css';
+import { REACT_API_ENDPOINT } from './constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +36,7 @@ const App = () => {
       const token = localStorage.getItem('jwt');
       console.log('Token from local storage:', token);
       if (token) {
-        const response = await fetch('http://localhost:4000/isLoggedIn', {
+        const response = await fetch(`${REACT_API_ENDPOINT}/isLoggedIn`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -50,7 +51,7 @@ const App = () => {
   }, []);
 
   const handleLogout = async () => {
-    const response = await fetch('/logout');
+    const response = await fetch(`${REACT_API_ENDPOINT}/logout`);
     if (response.ok) {
       localStorage.removeItem('jwt');
       setIsLoggedIn(false);

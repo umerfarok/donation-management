@@ -1,0 +1,1 @@
+export const REACT_API_ENDPOINT="https://masjid-backend-app-v1-0-0.onrender.com"

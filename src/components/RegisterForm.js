@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BeatLoader } from 'react-spinners';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './RegisterForm.css';
+import { REACT_API_ENDPOINT } from '../constants';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -19,7 +20,7 @@ const RegisterForm = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:4000/register', {
+      const response = await axios.post(`${REACT_API_ENDPOINT}/register`, {
         name,
         email,
         password,

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Paper, Typography, Grid } from '@material-ui/core';
+import { TextField, Button, Paper, Typography, Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Alert from '@material-ui/lab/Alert';
+import { REACT_API_ENDPOINT } from '../constants';
+import Loading from './Loading';
 const useStyles = makeStyles((theme) => ({
   form: {
     '& > *': {
@@ -17,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
 
 const DonationUserManager = () => {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -30,13 +34,17 @@ const DonationUserManager = () => {
   });
 
   useEffect(() => {
+    setLoading(true);
     const token = localStorage.getItem('jwt');
-    axios.get('http://localhost:4000/getDonationUsers', {
+    axios.get(`${REACT_API_ENDPOINT}/getDonationUsers`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-      .then(response => setUsers(response.data))
+      .then(response => {
+        setUsers(response.data);
+        setLoading(false);
+      })
       .catch(error => {
         console.error("Error adding user:", error);
         if (error.response && error.response.data) {
@@ -44,6 +52,7 @@ const DonationUserManager = () => {
         } else {
           setError("Error adding user: " + error.message);
         }
+        setLoading(false);
       }
       );
   }, [selectedUser]);
@@ -51,7 +60,7 @@ const DonationUserManager = () => {
     // Implement your email or SMS sending logic here
     toast.info("youor Email being sent.");
     const token = localStorage.getItem('jwt');
-    axios.post(`http://localhost:4000/sendReminder`, {email:user.email, userName: user.name}, {
+    axios.post(`${REACT_API_ENDPOINT}/sendReminder`, {email:user.email, userName: user.name}, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -81,7 +90,7 @@ const DonationUserManager = () => {
     event.preventDefault();
     const token = localStorage.getItem('jwt');
     if (selectedUser) {
-      axios.put(`http://localhost:4000/editDonationUser/${selectedUser._id}`, formData, {
+      axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${selectedUser._id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -101,7 +110,7 @@ const DonationUserManager = () => {
         }
         );
     } else {
-      axios.post('http://localhost:4000/addDonationUser', formData, {
+      axios.post(`${REACT_API_ENDPOINT}/addDonationUser`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -136,7 +145,7 @@ const DonationUserManager = () => {
   const handleVerifyPayment = async (user) => {
     try {
       const token = localStorage.getItem('jwt');
-      const response = await axios.put(`http://localhost:4000/editDonationUser/${user._id}`, {
+      const response = await axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${user._id}`, {
         paymentSuccessful: true,
       }, {
         headers: {
@@ -159,7 +168,7 @@ const DonationUserManager = () => {
 
   const handleDelete = (userId) => {
     const token = localStorage.getItem('jwt');
-    axios.delete(`http://localhost:4000/deleteDonationUser/${userId}`, {
+    axios.delete(`${REACT_API_ENDPOINT}/deleteDonationUser/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -183,7 +192,9 @@ const DonationUserManager = () => {
       [event.target.name]: event.target.checked,
     });
   };
-
+if (loading) {
+    return <div><Loading/></div>;
+}
   return (
     <Grid container spacing={3}>
       <ToastContainer />
