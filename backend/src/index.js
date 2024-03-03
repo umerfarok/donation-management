@@ -17,6 +17,7 @@ var eventEmitter = new events.EventEmitter();
 const dotenv = require('dotenv');
 dotenv.config();
 
+
 var sendEmailOnEventArrive = function (email, userName) {
   console.log('Reminder sent', email);
   let transporter = nodemailer.createTransport({
@@ -80,6 +81,9 @@ app.post('/sendReminder', verifyToken,  (req, res) => {
 
 app.get('/isLoggedIn', verifyToken, (req, res) => {
   return res.json(true);
+});
+app.get("/",(req, res) => {
+  res.send("Welcome to the Donation Management API");
 });
 app.get("/home", verifyToken, async (req, res) => {
   try {
