@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start index.js",
-    "stop": "pm2 stop index.js",
-    "delete": "pm2 delete index.js",
-    "dev": "nodemon index.js",
-    "runbun": "bun index.js"
+    "start": "pm2 start src/index.js",
+    "stop": "pm2 stop src/index.js",
+    "delete": "pm2 delete src/index.js",
+    "dev": "nodemon src/index.js",
+    "runbun": "bun src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,12 @@
     "mongodb": "^5.6.0",
     "mongoose": "^7.3.1",
     "nodemailer": "^6.9.11",
-    "nodemon": "^2.0.15",
-    "pm2": "^5.3.0"
+    "pm2": "^5.3.0",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0"
   }
 }

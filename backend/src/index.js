@@ -20,7 +20,8 @@ dotenv.config();
 var sendEmailOnEventArrive = function (email, userName) {
   console.log('Reminder sent', email);
   let transporter = nodemailer.createTransport({
-    host: 'email-smtp.us-east-1.amazonaws.com', 
+    host: 'smtp.gmail.com',
+    port: 465,
     secure: true, 
     auth: {
       user: process.env.SMTP_USER, 
@@ -40,7 +41,7 @@ var sendEmailOnEventArrive = function (email, userName) {
   
   If you haven't had a chance to donate yet, we kindly request you to do so at your earliest convenience. Every donation, no matter the size, makes a difference.
   
-  You can make your donation through [insert donation method here].
+  You can make your donation through ClickHere to Payment link.
   
   Thank you for your continued support. We greatly appreciate your generosity.
   
@@ -137,6 +138,11 @@ app.post("/register", async (req, res) => {
     res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });
+
+app.post("/logout", (req, res)=>{
+  res.status(200).json({ message: 'Logged out successfully' });
+}
+)
 
 app.delete("/users/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;

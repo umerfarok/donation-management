@@ -50,8 +50,13 @@ const App = () => {
   }, []);
 
   const handleLogout = async () => {
-    await fetch('/logout');
-    setIsLoggedIn(false);
+    const response = await fetch('/logout');
+    if (response.ok) {
+      localStorage.removeItem('jwt');
+      setIsLoggedIn(false);
+    } else {
+      console.error('Logout failed');
+    }
   };
 
   return (
