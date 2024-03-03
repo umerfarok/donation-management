@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Typography, Button, makeStyles, Tooltip } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, makeStyles, Tooltip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
