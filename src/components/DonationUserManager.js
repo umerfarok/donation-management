@@ -193,6 +193,7 @@ const DonationUserManager = () => {
           }
         });
     }
+    setOpen(false);
   };
 
   const handleEdit = (user) => {
