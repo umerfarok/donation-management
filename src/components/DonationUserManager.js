@@ -146,7 +146,6 @@ const DonationUserManager = () => {
     });
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const token = localStorage.getItem('jwt');
