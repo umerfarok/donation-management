@@ -12,7 +12,6 @@ const editDonationUserRoute = require('./editDonationUser.js');
 const deleteDonationUserRoute = require('./deleteDonationUser.js');
 const getDonationUsersRoute = require('./getDonationUsers.js');
 const secretKey = require('./constants.js');
-const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 var eventEmitter = new events.EventEmitter();
 const dotenv = require('dotenv');
@@ -52,22 +51,22 @@ var sendEmailOnEventArrive =async function (email, userName) {
   `
   };
   const user = await DonationUser.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
-  // console.log('User reminder updated:', user);
-  // console.log(user.reminder);
-  //    transporter.sendMail(mailOptions, async (error, info) => {
-  //   if (error) {
-  //     console.log('Error occurred', error);
-  //   } else {
-  //     console.log('Email sent', info.response);
-  //     try {
-  //       const user = await User.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
-  //       console.log('User reminder updated:', user);
-  //       return user.reminder;
-  //     } catch (error) {
-  //       console.error('Error updating user reminder:', error);
-  //     }
-  //   }
-  // });
+  console.log('User reminder updated:', user);
+  console.log(user.reminder);
+     transporter.sendMail(mailOptions, async (error, info) => {
+    if (error) {
+      console.log('Error occurred', error);
+    } else {
+      console.log('Email sent', info.response);
+      try {
+        const user = await User.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
+        console.log('User reminder updated:', user);
+        return user.reminder;
+      } catch (error) {
+        console.error('Error updating user reminder:', error);
+      }
+    }
+  });
 }
 
 eventEmitter.on('SendEmail', sendEmailOnEventArrive);

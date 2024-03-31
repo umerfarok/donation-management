@@ -1,23 +1,29 @@
-// editDonationUser.js
 const express = require('express');
 const router = express.Router();
 const DonationUser = require('./donationUser.js');
-
 router.put("/editDonationUser/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { year, paymentSuccessful } = req.body;
+    const { name, lastName, email, phone, address, reminder, year, money, paymentSuccessful } = req.body;
 
     const user = await DonationUser.findById(userId);
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    const payment = user.years.find(p => p.year === year);
+    user.name = name;
+    user.lastName = lastName;
+    user.email = email;
+    user.phone = phone;
+    user.address = address;
+    user.reminder = reminder;
+    user.money = money;
+
+    const payment = user.years.find(p => p.year === parseInt(year));
     if (payment) {
       payment.paymentSuccessful = paymentSuccessful;
     } else {
-      user.years.push({ year, paymentSuccessful });
+      user.years.push({ year: parseInt(year), paymentSuccessful });
     }
 
     const updatedUser = await user.save();

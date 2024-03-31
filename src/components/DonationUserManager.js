@@ -222,9 +222,9 @@ const DonationUserManager = () => {
   const handleVerifyPayment = async (user) => {
     try {
       const token = localStorage.getItem('jwt');
-      const response = await axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${user._id}`, {
-        paymentSuccessful: true,
-      }, {
+      const currentYear = new Date().getFullYear();
+      setFormData({ ...formData, year: currentYear });
+      const response = await axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${user._id}`, formData , {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -249,10 +249,11 @@ const DonationUserManager = () => {
       toast.error(" Year already exists");
       return;
     }
+    setFormData({ ...formData, year: currentYear });
 
     axios.put(
       `${REACT_API_ENDPOINT}/editDonationUser/${userId}`,
-      { year: currentYear, paymentSuccessful: false},
+     formData,
       {
         headers: {
           Authorization: `Bearer ${token}`
