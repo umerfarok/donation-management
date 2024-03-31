@@ -5,7 +5,7 @@ const verifyToken = require('./jwtAuthMiddleware');
 
 router.post("/addDonationUser", verifyToken, async (req, res) => {
   try {
-    const { name, lastName, email, phone, address } = req.body;
+    const { name, lastName, email, phone, address, reminder ,money} = req.body;
 
     // Check if user already exists
     const existingUser = await DonationUser.findOne({ email });
@@ -19,6 +19,8 @@ router.post("/addDonationUser", verifyToken, async (req, res) => {
       email,
       phone,
       address,
+      money,
+      reminder,
     });
 
     const result = await donationUser.save();

@@ -26,6 +26,7 @@ navigate('/login')
           Authorization: `Bearer ${token}`,
         }
       };
+      console.log(REACT_API_ENDPOINT)
       const response = await axios.get(`${REACT_API_ENDPOINT}/home`, config);
       // if (response.status === 401) {
       //   // Handle unauthorized access, such as clearing token and redirecting to login page

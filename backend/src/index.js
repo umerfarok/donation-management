@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const verifyToken = require('./jwtAuthMiddleware');
 const loginRoute = require('./login.js');
 const User = require('./user.js');
+const DonationUser = require('./donationUser.js')
 const addDonationUserRoute = require('./addDonationUser.js');
 const editDonationUserRoute = require('./editDonationUser.js');
 const deleteDonationUserRoute = require('./deleteDonationUser.js');
@@ -18,7 +19,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-var sendEmailOnEventArrive = function (email, userName) {
+var sendEmailOnEventArrive =async function (email, userName) {
   console.log('Reminder sent', email);
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -50,14 +51,23 @@ var sendEmailOnEventArrive = function (email, userName) {
   Masjid Committee
   `
   };
-  transporter.sendMail(
-    mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error occurred', error);
-    } else {
-      console.log('Email sent', info.response);
-    }
-  });
+  const user = await DonationUser.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
+  // console.log('User reminder updated:', user);
+  // console.log(user.reminder);
+  //    transporter.sendMail(mailOptions, async (error, info) => {
+  //   if (error) {
+  //     console.log('Error occurred', error);
+  //   } else {
+  //     console.log('Email sent', info.response);
+  //     try {
+  //       const user = await User.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
+  //       console.log('User reminder updated:', user);
+  //       return user.reminder;
+  //     } catch (error) {
+  //       console.error('Error updating user reminder:', error);
+  //     }
+  //   }
+  // });
 }
 
 eventEmitter.on('SendEmail', sendEmailOnEventArrive);
