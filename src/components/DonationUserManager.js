@@ -55,7 +55,7 @@ const DonationUserManager = () => {
     phone: '',
     address: '',
     reminder: 0,
-    year: '',
+    year: new Date().getFullYear(),
     money: 0,
     paymentSuccessful: false,
   });
@@ -149,9 +149,6 @@ const DonationUserManager = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const token = localStorage.getItem('jwt');
-    const currentYear = new Date().getFullYear();
-    setFormData({ ...formData, year: currentYear });
-    
     if (selectedUser) {
       axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${selectedUser._id}`, formData, {
         headers: {
@@ -172,12 +169,9 @@ const DonationUserManager = () => {
           }
         });
     } else {
-      const formDataWithYear = {
-        ...formData,
-        year: currentYear
-      };
 
-      axios.post(`${REACT_API_ENDPOINT}/addDonationUser`, formDataWithYear, {
+
+      axios.post(`${REACT_API_ENDPOINT}/addDonationUser`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -185,9 +179,9 @@ const DonationUserManager = () => {
         .then(response => {
           setOpen(false);
           const newUser = response.data;
-          newUser.years = [{ year: currentYear }];
+          newUser.years = [{ year: formData.year }];
           setUsers(prevUsers => [...prevUsers, newUser]);
-          setFormData({ name: '', lastName: '', email: '', phone: '', address: '', reminder: 0 });
+          setFormData({ name: '', lastName: '', email: '', phone: '', address: '', reminder: 0, year: '', paymentSuccessful: false, money: 0, });
         })
         .catch(error => {
           setOpen(false);
@@ -212,24 +206,35 @@ const DonationUserManager = () => {
       email: user.email,
       phone: user.phone,
       address: user.address,
+      reminder: user.reminder,
+      money: user.money,
+      year: currentYearData.year,
       paymentSuccessful: paymentSuccessful,
     });
     setOpen(true);
   };
-  
-  
+
+
 
   const handleVerifyPayment = async (user) => {
+    debugger
     try {
       const token = localStorage.getItem('jwt');
       const currentYear = new Date().getFullYear();
-      setFormData({ ...formData, year: currentYear });
-      const response = await axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${user._id}`, formData , {
+      if (user && user.years && user.years[0]) {
+        user.years[0].paymentSuccessful = true;
+      }
+      const formateData = {
+        _id: user._id
+        , name: user.name, lastName: user.lastName, email: user.email, phone: user.phone, address: user.address, reminder: user.reminder, year: currentYear, money: user.money, paymentSuccessful: true
+      }
+
+      const response = await axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${user._id}`, formateData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      if (response.data && response.data.paymentSuccessful) {
+      if (response.data && response.data.years[0].paymentSuccessful) {
         setUsers(users.map(u => u._id === user._id ? { ...u, paymentSuccessful: true } : u));
       }
     } catch (error) {
@@ -253,7 +258,7 @@ const DonationUserManager = () => {
 
     axios.put(
       `${REACT_API_ENDPOINT}/editDonationUser/${userId}`,
-     formData,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -302,7 +307,7 @@ const DonationUserManager = () => {
     setFormData({
       ...formData,
       [event.target.name]: event.target.checked,
-      
+
     });
   };
   if (loading) {
@@ -337,6 +342,9 @@ const DonationUserManager = () => {
               </Grid>
               <Grid item xs={11}>
                 <TextField name="address" value={formData.address} onChange={handleInputChange} label="Address" required fullWidth />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField name="money" value={formData.money} onChange={handleInputChange} label="money" required fullWidth />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -401,7 +409,7 @@ const DonationUserManager = () => {
                         <tbody>
                           {user.years && user.years.length > 0 ? (
                             user.years.map(year => (
-                              
+
                               <tr key={year.year}>
                                 <td style={{ border: '1px solid #a8a8a8', padding: '2px', textAlign: 'center' }}>{year.year}</td>
                                 <td style={{ border: '1px solid #a8a8a8', padding: '2px', textAlign: 'center' }}>
@@ -424,10 +432,10 @@ const DonationUserManager = () => {
 
                 </Grid>
                 <Grid style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }} item>
-                <Button type="button" onClick={() => handleEdit(user)} variant="outlined" color="primary" style={{ marginRight: '5px', padding: '0' }}>
-  <ModeEditIcon sx={{ fontSize: 18 }} />
-  Edit
-</Button>
+                  <Button type="button" onClick={() => handleEdit(user)} variant="outlined" color="primary" style={{ marginRight: '5px', padding: '0' }}>
+                    <ModeEditIcon sx={{ fontSize: 18 }} />
+                    Edit
+                  </Button>
                   <Button onClick={() => handleDelete(user._id)} variant="outlined" color="secondary" style={{ color: '#FF0000', marginRight: '5px', }}><DeleteIcon sx={{ fontSize: 18 }} />Delete</Button>
                   <Button onClick={() => handleVerifyPayment(user)} variant="outlined" color="primary" style={{ marginRight: '5px' }}><VerifiedIcon sx={{ fontSize: 18 }} />Verify Payment</Button>
                   <Button onClick={() => handleSendReminder(user)} variant="outlined" color="secondary" style={{ color: '#FF0000', marginRight: '5px' }}> <AlarmIcon sx={{ fontSize: 18 }} />Send Reminder</Button>

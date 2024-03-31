@@ -10,6 +10,7 @@ router.put("/editDonationUser/:userId", async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
+ 
 
     user.name = name;
     user.lastName = lastName;
@@ -18,12 +19,13 @@ router.put("/editDonationUser/:userId", async (req, res) => {
     user.address = address;
     user.reminder = reminder;
     user.money = money;
+    user.reminder = reminder;
 
     const payment = user.years.find(p => p.year === parseInt(year));
     if (payment) {
       payment.paymentSuccessful = paymentSuccessful;
     } else {
-      user.years.push({ year: parseInt(year), paymentSuccessful });
+      user.years.push({ year: year, paymentSuccessful });
     }
 
     const updatedUser = await user.save();
