@@ -152,7 +152,7 @@ const DonationUserManager = () => {
     const token = localStorage.getItem('jwt');
     const currentYear = new Date().getFullYear();
     stFormData({ ...formData, year: currentYear });
-    debugger
+    
 
     if (selectedUser) {
       axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${selectedUser._id}`, formData, {
