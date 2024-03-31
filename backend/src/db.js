@@ -1,7 +1,6 @@
 
 const mongoose = require("mongoose");
-// const CONNECTION_STRING ="mongodb+srv://umer:Kamalia713@cluster0.rlon9nk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-const CONNECTION_STRING = "mongodb://maxstore:maxstore-password@localhost:27017"
+const CONNECTION_STRING ="mongodb+srv://umer:Kamalia713@cluster0.rlon9nk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 mongoose.connect(CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
