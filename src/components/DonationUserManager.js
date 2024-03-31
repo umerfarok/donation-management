@@ -153,7 +153,6 @@ const DonationUserManager = () => {
     const currentYear = new Date().getFullYear();
     stFormData({ ...formData, year: currentYear });
     
-
     if (selectedUser) {
       axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${selectedUser._id}`, formData, {
         headers: {
