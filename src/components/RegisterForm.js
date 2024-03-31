@@ -20,8 +20,8 @@ const RegisterForm = () => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+
     setLoading(true);
     setError('');
 
@@ -36,13 +36,20 @@ const RegisterForm = () => {
       console.log(response.data);
       // Do something with the response if needed
       setLoading(false);
+      return response
     } catch (error) {
       console.error('Registration failed:', error);
       setError('Failed to register. Please try again.');
       setLoading(false);
+      return error
     }
   };
   const handleRegister = async () => {
+    await handleSubmit();
+    if (error) {
+      toast.error(error);
+      return;
+    }
     toast.success('Registration successful');
     setName('');
     setEmail('');

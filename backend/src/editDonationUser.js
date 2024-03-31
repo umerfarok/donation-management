@@ -5,11 +5,26 @@ const DonationUser = require('./donationUser.js');
 
 router.put("/editDonationUser/:userId", async (req, res) => {
   try {
-    const { userId, year, paymentStaus } = req.params;
-    const updatedUser = await DonationUser.findByIdAndUpdate(userId, { $set: { "years.$[elem].paymentSuccessful": true } }, { arrayFilters: [{ "elem.paymentSuccessful": false }], new: true });
+    const { userId } = req.params;
+    const { year, paymentSuccessful } = req.body;
+
+    const user = await DonationUser.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const payment = user.years.find(p => p.year === year);
+    if (payment) {
+      payment.paymentSuccessful = paymentSuccessful;
+    } else {
+      user.years.push({ year, paymentSuccessful });
+    }
+
+    const updatedUser = await user.save();
+
     res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating  user:", error);
+    console.error("Error updating user:", error);
     res.status(500).send({ message: "Something went wrong", error: error.message });
   }
 });

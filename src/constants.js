@@ -1,1 +1,1 @@
-export const REACT_API_ENDPOINT="https://masjid-backend-app-v1-0-0.onrender.com"
+export const REACT_API_ENDPOINT= process.env.NODE_ENV === "production" ? " https://masjid-backend-app-v1-0-0.onrender.com": "http://localhost:4000"

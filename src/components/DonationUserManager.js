@@ -150,7 +150,7 @@ const DonationUserManager = () => {
     event.preventDefault();
     const token = localStorage.getItem('jwt');
     const currentYear = new Date().getFullYear();
-    stFormData({ ...formData, year: currentYear });
+    setFormData({ ...formData, year: currentYear });
     
     if (selectedUser) {
       axios.put(`${REACT_API_ENDPOINT}/editDonationUser/${selectedUser._id}`, formData, {
@@ -183,12 +183,14 @@ const DonationUserManager = () => {
         }
       })
         .then(response => {
+          setOpen(false);
           const newUser = response.data;
           newUser.years = [{ year: currentYear }];
           setUsers(prevUsers => [...prevUsers, newUser]);
           setFormData({ name: '', lastName: '', email: '', phone: '', address: '', reminder: 0 });
         })
         .catch(error => {
+          setOpen(false);
           console.error("Error adding user:", error);
           if (error.response && error.response.data) {
             setError("Error adding user: " + error.response.data);
@@ -250,7 +252,7 @@ const DonationUserManager = () => {
 
     axios.put(
       `${REACT_API_ENDPOINT}/editDonationUser/${userId}`,
-      { $push: { years: { year: currentYear } } },
+      { year: currentYear, paymentSuccessful: false},
       {
         headers: {
           Authorization: `Bearer ${token}`
