@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Paper, Typography, Grid, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { TextField, Button, Paper, Typography, Grid,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
@@ -65,6 +65,12 @@ const DonationUserManager = () => {
     const token = localStorage.getItem('jwt');
     let fetchUrl = `${REACT_API_ENDPOINT}/getDonationUsers`;
     
+    
+    // if (formData.year) {
+    //   fetchUrl += `?year=${formData.year}`;
+    // }
+
+
     // if (formData.year) {
     //   fetchUrl += `?year=${formData.year}`;
     // }
@@ -85,13 +91,6 @@ const DonationUserManager = () => {
       });
   }, []);
 
-  const handleYearChange = (event) => {
-    const selectedYear = event.target.value;
-    setFormData({
-      ...formData,
-      year: selectedYear === '' ? '' : selectedYear,
-    });
-  };
   const handleOpen = () => {
     setOpen(true);
     setSelectedUser(null);
@@ -368,26 +367,13 @@ const DonationUserManager = () => {
       </Modal>
       <Grid container item xs={12} justifyContent="flex-end" style={{ marginRight: '23px', marginTop: '20px' }}>
 
-        <FormControl className={classes.select}>
-          <Select
-            labelId="year-label"
-            id="year"
-            value={formData.year || ''}
-            onChange={handleYearChange}
-            displayEmpty
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value={2023}>2023</MenuItem>
-            <MenuItem value={2024}>2024</MenuItem>
-          </Select>
-        </FormControl>
         <Button onClick={handleOpen} variant="contained" color="primary" style={{ marginRight: '12px' }}>
           <AddIcon />New User
         </Button>
       </Grid>
-      <Grid container spacing={3} style={{ padding: '0 20px' }}>
+      <Grid container spacing={1} style={{ padding: '0 25px' }}>
         {users.map(user => (
-          <Grid item xs={12} sm={6} key={user._id}>
+          <Grid item xs={9} sm={6} key={user._id}>
             <Paper elevation={3} style={{ padding: '10px', marginBottom: '5px' }}>
               <Grid container spacing={3} direction="column">
                 <Grid item>
