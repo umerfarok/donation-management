@@ -65,9 +65,9 @@ const DonationUserManager = () => {
     const token = localStorage.getItem('jwt');
     let fetchUrl = `${REACT_API_ENDPOINT}/getDonationUsers`;
     
-    if (formData.year) {
-      fetchUrl += `?year=${formData.year}`;
-    }
+    // if (formData.year) {
+    //   fetchUrl += `?year=${formData.year}`;
+    // }
 
     axios.get(fetchUrl, {
       headers: {
@@ -83,7 +83,7 @@ const DonationUserManager = () => {
         setError("Error fetching users: " + error.message);
         setLoading(false);
       });
-  }, [formData.year ]);
+  }, []);
 
   const handleYearChange = (event) => {
     const selectedYear = event.target.value;
