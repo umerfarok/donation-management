@@ -55,7 +55,7 @@ const DonationUserManager = () => {
     phone: '',
     address: '',
     reminder: 0,
-    year: new Date().getFullYear(),
+    year:'',
     money: 0,
     paymentSuccessful: false,
   });
@@ -64,9 +64,9 @@ const DonationUserManager = () => {
     setLoading(true);
     const token = localStorage.getItem('jwt');
     let fetchUrl = `${REACT_API_ENDPOINT}/getDonationUsers`;
-    if (formData.year) {
-      fetchUrl += `?year=${formData.year}`;
-    }
+    // if (formData.year) {
+    //   fetchUrl += `?year=${formData.year}`;
+    // }
 
     axios.get(fetchUrl, {
       headers: {
@@ -218,7 +218,6 @@ const DonationUserManager = () => {
 
 
   const handleVerifyPayment = async (user) => {
-    debugger
     try {
       const token = localStorage.getItem('jwt');
       const currentYear = new Date().getFullYear();
@@ -248,18 +247,19 @@ const DonationUserManager = () => {
     }
   };
   const handleAddCurrentYear = (userId) => {
+    debugger
     const token = localStorage.getItem('jwt');
     const currentYear = new Date().getFullYear();
     const user = users.find(u => u._id === userId);
-    if (user && user.years.some(year => year.year === currentYear)) {
-      toast.error(" Year already exists");
-      return;
-    }
-    setFormData({ ...formData, year: currentYear });
-
+    // if (user && user.years.some(year => year.year === currentYear)) {
+    //   toast.error(" Year already exists");
+    //   return;
+    // }
+    const updatedFormData = {name: user.name,lastName: user.lastName,email: user.email,phone: user.phone,address: user.address,reminder: user.reminder,year: currentYear,money: user.money,paymentSuccessful: user.years[0].paymentSuccessful};
+  
     axios.put(
       `${REACT_API_ENDPOINT}/editDonationUser/${userId}`,
-      formData,
+      updatedFormData,
       {
         headers: {
           Authorization: `Bearer ${token}`
