@@ -19,6 +19,7 @@ router.put("/editDonationUser/:userId", async (req, res) => {
     user.address = address;
     user.reminder = reminder;
     user.money = money;
+    user.paymentSuccessful = paymentSuccessful;
     user.reminder = reminder;
 
     const payment = user.years.find(p => p.year === parseInt(year));

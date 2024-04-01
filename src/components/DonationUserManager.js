@@ -64,9 +64,10 @@ const DonationUserManager = () => {
     setLoading(true);
     const token = localStorage.getItem('jwt');
     let fetchUrl = `${REACT_API_ENDPOINT}/getDonationUsers`;
-    // if (formData.year) {
-    //   fetchUrl += `?year=${formData.year}`;
-    // }
+    
+    if (formData.year) {
+      fetchUrl += `?year=${formData.year}`;
+    }
 
     axios.get(fetchUrl, {
       headers: {
@@ -82,7 +83,7 @@ const DonationUserManager = () => {
         setError("Error fetching users: " + error.message);
         setLoading(false);
       });
-  }, []);
+  }, [formData.year ]);
 
   const handleYearChange = (event) => {
     const selectedYear = event.target.value;
@@ -247,17 +248,15 @@ const DonationUserManager = () => {
     }
   };
   const handleAddCurrentYear = (userId) => {
-    debugger
     const token = localStorage.getItem('jwt');
     const currentYear = new Date().getFullYear();
     const user = users.find(u => u._id === userId);
-    // if (user && user.years.some(year => year.year === currentYear)) {
-    //   toast.error(" Year already exists");
-    //   return;
-    // }
-    const updatedFormData = {name: user.name,lastName: user.lastName,email: user.email,phone: user.phone,address: user.address,reminder: user.reminder,year: currentYear,money: user.money,paymentSuccessful: user.years[0].paymentSuccessful};
-  
-    axios.put(
+    if (user && user.years.some(year => year.year === currentYear)) {
+      toast.error(" Year already exists");
+      return;
+    }
+    const updatedFormData = {name: user.name,lastName: user.lastName,email: user.email,phone: user.phone,address: user.address,reminder: user.reminder,year: currentYear,money: user.money,paymentSuccessful: user.paymentSuccessful };
+     axios.put(
       `${REACT_API_ENDPOINT}/editDonationUser/${userId}`,
       updatedFormData,
       {
@@ -408,7 +407,7 @@ const DonationUserManager = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {user.years && user.years.length > 0 ? (
+                          {user.years && user.years.length > 0 ?(
                             user.years.map(year => (
 
                               <tr key={year.year}>
