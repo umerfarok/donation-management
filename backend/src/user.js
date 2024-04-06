@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
   money: {
     type: Number,
   },
+  approved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

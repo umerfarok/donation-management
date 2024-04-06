@@ -15,8 +15,10 @@ const secretKey = require('./constants.js');
 const nodemailer = require('nodemailer');
 var eventEmitter = new events.EventEmitter();
 const dotenv = require('dotenv');
-dotenv.config();
+const createDefaultUser = require('./defaultUser'); 
 
+dotenv.config();
+createDefaultUser().catch(console.error);
 
 var sendEmailOnEventArrive =async function (email, userName) {
   console.log('Reminder sent', email);
@@ -183,5 +185,6 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
 
 
 app.listen(PORT, () => {
+  createDefaultUser().catch(console.error);
   console.log(`Server is running on port ${PORT}`);
 });
