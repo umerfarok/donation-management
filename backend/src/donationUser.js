@@ -24,9 +24,22 @@ const donationUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  paymentSuccessful: {
-    type: Boolean,
-    default: false,
+  reminder: {
+    type: Number,
+    required: true,
+  },
+  years: [{
+    year: {
+      type: Number,
+      required: true,
+    },
+    paymentSuccessful: {
+      type: Boolean,
+      default: false,
+    },
+  }],
+  money: {
+    type: Number,
   },
 });
 

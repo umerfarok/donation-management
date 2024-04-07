@@ -25,3 +25,10 @@ jobs:
         context: ./backend
         push: true
         tags: 09078601/masjid-backend-app:v1.0.0
+
+    - name: Deploy to Render
+      env:
+        deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
+

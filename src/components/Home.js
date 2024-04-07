@@ -26,6 +26,7 @@ navigate('/login')
           Authorization: `Bearer ${token}`,
         }
       };
+      console.log(REACT_API_ENDPOINT)
       const response = await axios.get(`${REACT_API_ENDPOINT}/home`, config);
       // if (response.status === 401) {
       //   // Handle unauthorized access, such as clearing token and redirecting to login page
@@ -50,7 +51,7 @@ navigate('/login')
 
   return (
     <div className="home-container">
-      <h2 className="home-title">Home</h2>
+      <h2 className="home-title">Home Page</h2>
       {loading ? (
         <div className="loader-container">
           <BeatLoader color="Green" loading={loading} size={15} />
@@ -61,11 +62,9 @@ navigate('/login')
         <div className="user-list">
           {users.map((user) => (
             <div key={user._id} className="user-card">
-              <h3 className="user-name">{user.name}</h3>
-              <p className="user-email">Email: {user.email}</p>
-              <p className="user-email">Money: {user.money}</p>
-              <p className="user-email">Team: {user.teamName  }</p>
-              <p className="user-date">Date: {formatDate(user.date)}</p>
+              <h3 className="user-name"><span className='small_heading '>Admin Name: </span>{user.name}</h3>
+              <p className="user-email"><span className='small_heading'>Email:</span> {user.email}</p>
+              <p className="user-date"><span className='small_heading'>Date:</span> {formatDate(user.date)}</p>
             </div>
           ))}
         </div>

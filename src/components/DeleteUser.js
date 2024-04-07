@@ -19,27 +19,28 @@ const DeleteUser = ({ userId, onDeleteUser }) => {
   };
 
   return (
-    <div className="delete-user">
+    <div className="delete-user "style={{display:'inline-block'}}>
       <button className="btn btn-danger" onClick={handleDeleteClick}>
         Delete User
       </button>
 
       {showModal && (
-        <div className="modal">
+        <div className="modal" >
           <div className="modal-content">
-            <h3>Confirm User Deletion</h3>
-            <p>Enter the password to delete the user:</p>
+            <h3>Confirm user deletion</h3>
+            <p >Enter password to delete the user:</p>
             <input
               type="text"
-              placeholder='SomeSecretPassword'
+              placeholder='Some secret password...'
               value={password}
+              style={{marginBottom:'8px',borderRadius:'9px',padding:'4px'}}
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className="modal-buttons">
               <button className="btn btn-danger" onClick={handleConfirmDelete}>
                 Delete
               </button>
-              <button className="btn btn-secondary" onClick={handleCancelDelete}>
+              <button className="btn btn-secondary" style={{margin:'8px'}} onClick={handleCancelDelete}>
                 Cancel
               </button>
             </div>

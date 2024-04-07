@@ -1,33 +1,42 @@
 .home-container {
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  .home-title {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .user-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-  }
-  
-  .user-card {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .user-name {
-    margin-top: 0;
-  }
-  
-  .user-email,
-  .user-date {
-    margin-bottom: 5px;
-  }
-  
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.home-title {
+  text-align: center;
+  margin-top: 13px;
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #2248d2;
+}
+.small_heading{
+  color: #2248d2;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.user-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 32%;
+}
+
+.user-name {
+  margin-top: 0;
+}
+
+.user-email,
+.user-date {
+  font-size: 18px;
+  margin-bottom: 5px;
+}

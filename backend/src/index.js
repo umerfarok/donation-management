@@ -6,19 +6,22 @@ const bcrypt = require("bcrypt");
 const verifyToken = require('./jwtAuthMiddleware');
 const loginRoute = require('./login.js');
 const User = require('./user.js');
+const DonationUser = require('./donationUser.js')
 const addDonationUserRoute = require('./addDonationUser.js');
 const editDonationUserRoute = require('./editDonationUser.js');
 const deleteDonationUserRoute = require('./deleteDonationUser.js');
 const getDonationUsersRoute = require('./getDonationUsers.js');
+const approveUserRoute = require('./approveUser.js');
 const secretKey = require('./constants.js');
-const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 var eventEmitter = new events.EventEmitter();
 const dotenv = require('dotenv');
+const createDefaultUser = require('./defaultUser'); 
+
 dotenv.config();
+createDefaultUser().catch(console.error);
 
-
-var sendEmailOnEventArrive = function (email, userName) {
+var sendEmailOnEventArrive =async function (email, userName) {
   console.log('Reminder sent', email);
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -50,12 +53,21 @@ var sendEmailOnEventArrive = function (email, userName) {
   Masjid Committee
   `
   };
-  transporter.sendMail(
-    mailOptions, (error, info) => {
+  const user = await DonationUser.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
+  console.log('User reminder updated:', user);
+  console.log(user.reminder);
+     transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
       console.log('Error occurred', error);
     } else {
       console.log('Email sent', info.response);
+      try {
+        const user = await User.findOneAndUpdate({ email: email },{ $inc: { reminder: 1 } }, { new: true });
+        console.log('User reminder updated:', user);
+        return user.reminder;
+      } catch (error) {
+        console.error('Error updating user reminder:', error);
+      }
     }
   });
 }
@@ -72,6 +84,7 @@ app.use(addDonationUserRoute);
 app.use(editDonationUserRoute);
 app.use(deleteDonationUserRoute);
 app.use(getDonationUsersRoute);
+app.use(approveUserRoute);
 
 app.post('/sendReminder', verifyToken,  (req, res) => {
   const {email, userName} = req.body
@@ -174,5 +187,6 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
 
 
 app.listen(PORT, () => {
+  createDefaultUser().catch(console.error);
   console.log(`Server is running on port ${PORT}`);
 });

@@ -20,11 +20,15 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  teamName: {
-    type: String,
-  },
-  money: {
-    type: Number,
+  // teamName: {
+  //   type: String,
+  // },
+  // money: {
+  //   type: Number,
+  // },
+  approved: {
+    type: Boolean,
+    default: false,
   },
 });
 
