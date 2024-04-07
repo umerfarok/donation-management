@@ -14,8 +14,7 @@ async function createDefaultUser() {
     const hashedPassword = await bcrypt.hash('admin@123', salt);
 
     const defaultUser = new User({
-      name: 'majid ',
-      lastName: 'Admin',
+      name: 'Super Admin',
       email: 'admin@masjid.com',
       password: hashedPassword,
       // teamName: 'Default Team',
