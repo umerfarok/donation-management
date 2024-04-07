@@ -18,8 +18,8 @@ async function createDefaultUser() {
       lastName: 'Admin',
       email: 'admin@masjid.com',
       password: hashedPassword,
-      teamName: 'Default Team',
-      money: 0,
+      // teamName: 'Default Team',
+      // money: 0,
       approved: true,});
 
     const savedUser = await defaultUser.save();

@@ -10,18 +10,16 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [teamName, setTeamName] = useState('');
-  const [money, setMoney] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
-
     setLoading(true);
     setError('');
 
@@ -30,35 +28,48 @@ const RegisterForm = () => {
         name,
         email,
         password,
-        teamName,
-        money,
       });
-      console.log(response.data);
-      // Do something with the response if needed
+
       setLoading(false);
-      return response
+
+      if (response.status === 200) {
+        toast.info("Please wait for Admin Approval...");
+      } else {
+        toast.error('Failed to register. Please try again.');
+      }
+
+      return response;
     } catch (error) {
       console.error('Registration failed:', error);
       setError('Failed to register. Please try again.');
       setLoading(false);
-      return error
+      toast.error('Failed to register. Please try again.');
+      return error;
     }
   };
+
   const handleRegister = async () => {
-    await handleSubmit();
-    if (error) {
-      toast.error(error);
-      return;
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await handleSubmit();
+
+      setLoading(false);
+
+      if (response.status === 200) {
+        setName('');
+        setEmail('');
+        setPassword('');
+      }
+    } catch (error) {
+      console.error('Error while registering:', error);
+      setLoading(false);
+      setError('Failed to register. Please try again.');
+      toast.error('Failed to register. Please try again.');
     }
-    toast.success('Registration successful');
-    setName('');
-    setEmail('');
-    setPassword('');
-    setTeamName('');
-    setMoney('');
-
-  }
-
+  };
+  
   return (
     <div style={{ position: 'relative', overflow: 'hidden', height: '90vh', backgroundImage: `url(${Background})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <ToastContainer />
@@ -121,35 +132,7 @@ const RegisterForm = () => {
                 }}
               />
             </div>
-            <div style={{ marginBottom: '20px' }}>
-              <TextField
-                label="Team Name"
-                type="text"
-                value={teamName}
-                placeholder='Enter team name'
-                onChange={(e) => setTeamName(e.target.value)}
-                required
-                fullWidth
-                InputProps={{
-                  style: { fontSize: '16px', borderRadius: '5px' },
-                }}
-              />
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-              <TextField
-                label="Money"
-                type="text"
-                value={money}
-                placeholder='Enter money'
-                onChange={(e) => setMoney(e.target.value)}
-                required
-                fullWidth
-                InputProps={{
-                  style: { fontSize: '16px', borderRadius: '5px' },
-                }}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary" onClick={handleRegister} style={{marginLeft:'23%', width: '50%', padding: '10px', borderRadius: '5px', fontSize: '16px', backgroundColor: '#007bff', color: '#fff', border: 'none', cursor: 'pointer', marginBottom:'15px' }}>
+            <button type="button" className="btn btn-primary" onClick={handleRegister} style={{marginLeft:'23%', width: '50%', padding: '10px', borderRadius: '5px', fontSize: '16px', backgroundColor: '#007bff', color: '#fff', border: 'none', cursor: 'pointer', marginBottom:'15px' }}>
               Register
             </button>
             <div style={{ textAlign: 'center' }}>Already have an account? <a href='/login' style={{ textDecoration: 'none', color: '#007bff',fontSize:'17px' }}>login</a></div>

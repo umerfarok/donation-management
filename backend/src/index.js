@@ -11,6 +11,7 @@ const addDonationUserRoute = require('./addDonationUser.js');
 const editDonationUserRoute = require('./editDonationUser.js');
 const deleteDonationUserRoute = require('./deleteDonationUser.js');
 const getDonationUsersRoute = require('./getDonationUsers.js');
+const approveUserRoute = require('./approveUser.js');
 const secretKey = require('./constants.js');
 const nodemailer = require('nodemailer');
 var eventEmitter = new events.EventEmitter();
@@ -83,6 +84,7 @@ app.use(addDonationUserRoute);
 app.use(editDonationUserRoute);
 app.use(deleteDonationUserRoute);
 app.use(getDonationUsersRoute);
+app.use(approveUserRoute);
 
 app.post('/sendReminder', verifyToken,  (req, res) => {
   const {email, userName} = req.body

@@ -1,5 +1,10 @@
 .container {
-    max-width: 800px;
+ display: flex;
+ flex-wrap: wrap;
+ 
+ 
+ flex-direction: column;
+    max-width:100%;
     margin: 0 auto;
     padding: 20px;
   }
@@ -7,19 +12,23 @@
   .loader-container {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap ;
     align-items: center;
     height: 100px;
   }
   
   .user-card {
+    width: 32%;
+    height: 25vh;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 10px;
-    margin-bottom: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;    margin-bottom: 20px;
   }
   
   .user-info {
-    margin-bottom: 5px;
+    margin: 15px;
+    font-size: large; 
   }
   
   .money-actions {
@@ -35,7 +44,7 @@
   .money-actions .btn {
     margin-left: 5px;
   }
-  /* Modal */
+ 
 .modal {
     position: fixed;
     top: 0;
@@ -62,4 +71,77 @@
     right: 10px;
     cursor: pointer;
   }
+  .main_section{
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 15px;
+    flex-direction: row;
+  }
+  .btns{
+    display: flex;
+    justify-content:center;
+    margin-top:26px;
+  }
+  .heading{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #2248d2;
+    margin-bottom: 25px;
+  }
   
+@media only screen and (max-width: 768px) {
+  .user-card {
+    width: 48%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .user-card {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .user-card {
+    width: 48%;
+  }
+}
+.btns {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.btns button {
+  margin: 5px;
+}
+.Toastify__toast-container {
+  padding-top: 75px;
+}
+
+.Toastify__toast {
+  height: auto;
+}
+
+@media only screen and (max-width: 480px) {
+  .btns {
+    flex-wrap: wrap;
+  }
+
+}
+@media only screen and (max-width: 480px) {
+  .btns {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 650px) {
+  .main_section {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+  .user-card {
+    width: 90%;
+  }
+}

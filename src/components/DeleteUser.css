@@ -1,39 +1,63 @@
 .delete-user {
-    margin-top: 20px;
-  }
-  
-  h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .input-container {
-    margin-bottom: 10px;
-  }
-  
-  label {
-    display: block;
-    font-weight: bold;
-  }
-  
-  input {
-    padding: 5px;
-    width: 200px;
-  }
-  
-  .error-message {
-    color: red;
-  }
-  
-  .success-message {
-    color: green;
-  }
-  
-  button {
-    padding: 5px 10px;
-    background-color: #4287f5;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
+  margin-top: 20px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input {
+  padding: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #4287f5;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  height: auto;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal-buttons button {
+  margin-top: 10px;
+}
